@@ -427,7 +427,13 @@ function! msgpack#pack(...)
   let r = ''
   for a in a:000
     if type(a) == 0
-      let r .= printf("%02X", a)
+      if a < 256
+        let r .= printf("%02X", a)
+      elseif a < 65536
+        let r .= printf("D1%04X", a)
+      else
+        let r .= printf("D2%08X", a)
+      endif
     elseif type(a) == 1
 	  let s = join(map(range(len(a)), 'printf("%02X", char2nr(a[v:val]))'), '')
 	  let r .= printf("%02X", or(0xA0, len(a))) . s
