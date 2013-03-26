@@ -3,14 +3,6 @@ require 'msgpack/rpc'
 require 'nokogiri'
 require 'open-uri'
 class MyHandler
-  def vimhack(x)
-    doc = Nokogiri::HTML(open('http://vim-users.jp/vim-hacks-project/'))
-    doc.css('ul>li>a').each do |e|
-      if e.content =~ /^Hack ##{x}:/
-        return e['href'].to_s
-      end
-    end
-  end
   def add(x,y) x+y end
   def get_dict() {:foo => "ばー"} end
 end
