@@ -418,8 +418,8 @@ function! msgpack#unpack(bytes)
     return [bytes[0], bytes[1:]]
   endif
   " TODO
-  " map 16	 11011110	 0xde
-  " map 32	 11011111	 0xdf
+  " map 16 11011110 0xde
+  " map 32 11011111 0xdf
   throw "Unknown type: " . s:hex(bytes[0])
 endfunction
 
@@ -435,10 +435,10 @@ function! msgpack#pack(...)
         let r .= printf("D2%08X", a)
       endif
     elseif type(a) == 1
-	  let s = join(map(range(len(a)), 'printf("%02X", char2nr(a[v:val]))'), '')
-	  let r .= printf("%02X", or(0xA0, len(a))) . s
+      let s = join(map(range(len(a)), 'printf("%02X", char2nr(a[v:val]))'), '')
+      let r .= printf("%02X", or(0xA0, len(a))) . s
     elseif type(a) == 3
-	  let r .= printf("%02X", or(0x90, len(a)))
+      let r .= printf("%02X", or(0x90, len(a)))
       for v in a
         let r .= msgpack#pack(v)
         unlet v
@@ -471,7 +471,7 @@ function! msgpack#pack(...)
       let eb = ("000000000" . b)[-11:]
       let fb .= repeat('0', 63-len(eb)-len(fb))
       let bb = map(split(sign ? '1' : '0' . eb . fb, '........\zs'), 's:log2[v:val]')
-	  let r .= join(map(bb, 'printf("%02X", v:val)'), '')
+      let r .= join(map(bb, 'printf("%02X", v:val)'), '')
     endif
   endfor
   return r
