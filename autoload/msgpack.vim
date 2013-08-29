@@ -429,30 +429,30 @@ endfunction
 function! msgpack#pack(...)
   let r = ''
   for a in a:000
-    if type(a) == 0
-      if a < 256
+    if type(a) == 0 " number
+      if a < 256 " 8bit
         let r .= printf("%02X", a)
-      elseif a < 65536
+      elseif a < 65536 " 16bit
         let r .= printf("D1%04X", a)
       else
         let r .= printf("D2%08X", a)
       endif
-    elseif type(a) == 1
+    elseif type(a) == 1 " string
       let s = join(map(range(len(a)), 'printf("%02X", char2nr(a[v:val]))'), '')
       let r .= printf("%02X", or(0xA0, len(a))) . s
-    elseif type(a) == 3
+    elseif type(a) == 3 " list
       let r .= printf("%02X", or(0x90, len(a)))
       for v in a
         let r .= msgpack#pack(v)
         unlet v
       endfor
-    elseif type(a) == 4
+    elseif type(a) == 4 " dictionary
       let r .= printf("%02X", or(0x80, len(keys(a))))
       for k in keys(a)
         let r .= msgpack#pack(k)
         let r .= msgpack#pack(a[k])
       endfor
-    elseif type(a) == 5
+    elseif type(a) == 5 " float
       let r .= "CB"
       let sign = a < 0
       if sign
