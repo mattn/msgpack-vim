@@ -1,5 +1,8 @@
 scriptencoding utf-8
 
+let s:save_cpo = &cpo
+set cpo&vim
+
 let s:client = { "sock" : -1, "id" : 0 }
 
 let s:pow2 = [
@@ -535,5 +538,8 @@ function! msgpack#client(host, port)
   let client.sock = vimproc#socket_open(a:host, a:port)
   return client 
 endfunction
+
+let &cpo= s:save_cpo
+unlet s:save_cpo
 
 " vim: set et:
