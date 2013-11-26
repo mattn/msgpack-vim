@@ -1,0 +1,127 @@
+*msgpack.txt*	Msgpack implementation for Vim
+
+	   -----------------------------------------------------
+	     msgpack: a MessagePack implementation by vim script
+	   -----------------------------------------------------
+
+Author: Yasuhiro Matsumoto <mattn.jp@gmail.com>
+WebSite: http://mattn.kaoriya.net/
+Repository: http://github.com/mattn/msgpack-vim
+Site: http://mattn.github.com/msgpack-vim
+License: The MIT License (MIT) {{{
+
+Copyright (c) 2012-2013 Yasuhiro Matsumoto
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+}}}
+
+==============================================================================
+CONTENTS						    *msgpack-contents*
+
+Introduction	       |msgpack-introduction|
+Install		       |msgpack-install|
+Example		       |msgpack-example|
+API		       |msgpack-api|
+Links		       |msgpack-links|
+ToDo		       |msgpack-todo|
+
+==============================================================================
+INTRODUCTION				      *msgpack-introduction* *msgpack*
+
+|msgpack| is an implementation for MessagePack specification.
+You can connect a server-side program using this plugin.
+
+If you want to read MessagePack specification, visit here.
+  https://github.com/msgpack/msgpack/blob/master/spec.md
+
+==============================================================================
+INSTALL							     *msgpack-install*
+
+Install the distributed files into Vim runtime directory which is usually
+~/.vim/, or $HOME/vimfiles on Windows.
+
+If you install pathogen that provided from Tim Pope, you should extract the
+file into 'bundle' directory.
+
+==============================================================================
+EXAMPLE							     *msgpack-example*
+
+
+>
+  let mp = msgpack#client("127.0.0.1", 18800)
+
+  " 3
+  echo mp.call("add", 1, 2)
+
+  " {'foo': 'ばー'}
+  echo mp.call("get_dict")
+
+  call mp.close()
+<
+
+>
+  # -*- coding: utf-8 -*-
+  require 'msgpack/rpc'
+  require 'nokogiri'
+  require 'open-uri'
+  class MyHandler
+    def add(x,y) x+y end
+    def get_dict() {:foo => "ばー"} end
+  end
+  svr = MessagePack::RPC::Server.new
+  svr.listen('0.0.0.0', 18800, MyHandler.new)
+  svr.run
+<
+
+==============================================================================
+API								 *msgpack-api*
+
+msgpack#client({address}, {port})			    *msgpack#client()*
+		Connect to MessagePack RPC Server using {address} and {port}.
+		This function returns "rpc-client" dictionary.
+
+		The keys are follows:
+
+		call({funcname}, [{args}])	Invoke server-side function.
+
+		close()				Close current session.
+
+msgpack#pack(...)					      *msgpack#pack()*
+		Encode arguments to hex formed string by MessagePack
+		specification.
+
+		TODO
+
+msgpack#unpack({bytes})					    *msgpack#unpack()*
+		Decode hex formed string by MessagePack specification.
+		This function returns vim data types.
+
+		TODO
+
+==============================================================================
+LINKS							       *msgpack-links*
+
+MessagePack official site:
+  http://msgpack.org/
+
+==============================================================================
+TODO								*msgpack-todo*
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:noet:fen:fdl=0:
