@@ -456,7 +456,7 @@ function! msgpack#pack(...)
       let r .= "CB"
       let sign = a < 0
       if sign
-        let a *= -1
+        let a = a * -1
       endif
       let exp = float2nr(log(a) / 0.6931471805599453 + 1023.0)
       let frac = float2nr(a * pow(2, 30 + 1023 - exp))
